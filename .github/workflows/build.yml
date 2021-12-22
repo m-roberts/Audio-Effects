@@ -21,7 +21,7 @@ jobs:
           submodules: true
 
       - name: macOS Build
-        if: runner.os == "macOS"
+        # if: runner.os == "macOS"
         run: |
           cd ~
           wget https://github.com/juce-framework/JUCE/releases/download/6.0.4/juce-6.0.4-osx.zip
