@@ -29,12 +29,14 @@ jobs:
               cd ${p}
               ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave ${p}.jucer
               xcodebuild -project ./Builds/MacOSX/${p}.xcodeproj -alltargets -configuration Release -arch $(uname -m)
+              cd ./Products
+              zip -r ${p}.zip ./*
             )
           done
 
-      - name: Upload artefacts
+      - name: Upload zipped artefacts
         uses: actions/upload-artifact@v2
         with:
           path: |
-            ./artefacts/*
+            ./**/Products/*.zip
           if-no-files-found: error
