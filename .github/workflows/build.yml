@@ -27,7 +27,7 @@ jobs:
           for p in "${plugins[@]}"; do
             (
               cd ${p}
-              ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave ${p}.juicer
+              ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave ${p}.jucer
               xcodebuild -project ./Builds/MacOSX/${p}.xcodeproj -alltargets -configuration Release -arch $(uname -m)
             )
           done
