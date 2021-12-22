@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.4.0
+        with:
+          submodules: true
+
+      - name: Build
+        run: |
+          cd ~
+          wget https://github.com/juce-framework/JUCE/releases/download/6.0.4/juce-6.0.4-osx.zip
+          unzip ./juce-6.0.4-osx.zip
+          rm ./juce-6.0.4-osx.zip
+          plugins=('Chorus' 'Compressor-Expander' 'Delay' 'Distortion' 'Flanger' 'Panning' 'Parametric EQ' 'Phaser' 'Ping-Pong Delay' 'Pitch Shift' 'README.md' 'Ring Modulation' 'Robotization-Whisperization' 'Screenshots' 'Template Frequency Domain' 'Template Time Domain' 'Tremolo' 'Vibrato' 'Wah-Wah')
+          for p in "${plugins[@]}"; do
+            (
+              cd ${p}
+              ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave ${p}.juicer
+              xcodebuild -project ./Builds/MacOSX/${p}.xcodeproj -alltargets -configuration Release -arch $(uname -m)
+            )
+          done
+
+      - name: Upload artefacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: |
+            ./artefacts/*
+          if-no-files-found: error
