@@ -45,8 +45,8 @@ jobs:
         id: cache-juce
         uses: actions/cache@v2
         with:
-          path: ~/JUCE
-          key: ${{ runner.os }}-juce
+          path: "~/JUCE"
+          key: juce-${{ env.JUCE_VERSION }}-${{ runner.os }}
 
       - name: macOS JUCE Download
         if: steps.cache-juce.outputs.cache-hit != 'true'
@@ -62,6 +62,7 @@ jobs:
           ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave "${{ matrix.plugin }}.jucer"
           xcodebuild -project "./Builds/MacOSX/${{ matrix.plugin }}.xcodeproj" -alltargets -configuration Release -arch $(uname -m)
           cd "${{github.workspace }}/${{ matrix.plugin }}/Products"
+          rm -rf ./{VST3,lib${{ matrix.plugin }}.a}
           zip -r "${{ matrix.plugin }}.zip" ./*
 
       # TODO: Windows steps
