@@ -5,6 +5,7 @@ on:
   push:
   workflow_dispatch:
 
+# Matches submodule commit
 env:
   JUCE_VERSION: "6.0.4"
 
@@ -58,11 +59,14 @@ jobs:
 
       - name: macOS Build
         run: |
+          set -x
           cd "${{github.workspace }}/${{ matrix.plugin }}"
           ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave "${{ matrix.plugin }}.jucer"
           xcodebuild -project "./Builds/MacOSX/${{ matrix.plugin }}.xcodeproj" -alltargets -configuration Release -arch $(uname -m)
           cd "${{github.workspace }}/${{ matrix.plugin }}/Products"
-          rm -rf ./{VST3,lib${{ matrix.plugin }}.a}
+          ls -lR
+          rm -rf ./VST3/ ./lib*.a
+          ls -lR
           zip -r "${{ matrix.plugin }}.zip" ./*
 
       # TODO: Windows steps
