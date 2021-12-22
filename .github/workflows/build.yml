@@ -23,7 +23,7 @@ jobs:
             rm ./juce-6.0.4-osx.zip
           )
 
-          plugins=('Chorus' 'Compressor-Expander' 'Delay' 'Distortion' 'Flanger' 'Panning' 'Parametric EQ' 'Phaser' 'Ping-Pong Delay' 'Pitch Shift' 'README.md' 'Ring Modulation' 'Robotization-Whisperization' 'Screenshots' 'Template Frequency Domain' 'Template Time Domain' 'Tremolo' 'Vibrato' 'Wah-Wah')
+          plugins=('Chorus' 'Compressor-Expander' 'Delay' 'Distortion' 'Flanger' 'Panning' 'Parametric EQ' 'Phaser' 'Ping-Pong Delay' 'Pitch Shift' 'Ring Modulation' 'Robotization-Whisperization' 'Template Frequency Domain' 'Template Time Domain' 'Tremolo' 'Vibrato' 'Wah-Wah')
           for p in "${plugins[@]}"; do
             (
               cd ${p}
