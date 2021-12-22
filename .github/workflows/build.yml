@@ -7,7 +7,11 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+        plugin: ['Chorus', 'Compressor-Expander', 'Delay', 'Distortion', 'Flanger', 'Panning', 'Parametric EQ', 'Phaser', 'Ping-Pong Delay', 'Pitch Shift', 'Ring Modulation', 'Robotization-Whisperization', 'Template Frequency Domain', 'Template Time Domain', 'Tremolo', 'Vibrato', 'Wah-Wah']
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.4.0
@@ -16,23 +20,16 @@ jobs:
 
       - name: Build
         run: |
-          (
-            cd ~
-            wget https://github.com/juce-framework/JUCE/releases/download/6.0.4/juce-6.0.4-osx.zip
-            unzip ./juce-6.0.4-osx.zip
-            rm ./juce-6.0.4-osx.zip
-          )
+          cd ~
+          wget https://github.com/juce-framework/JUCE/releases/download/6.0.4/juce-6.0.4-osx.zip
+          unzip ./juce-6.0.4-osx.zip
+          rm ./juce-6.0.4-osx.zip
 
-          plugins=('Chorus' 'Compressor-Expander' 'Delay' 'Distortion' 'Flanger' 'Panning' 'Parametric EQ' 'Phaser' 'Ping-Pong Delay' 'Pitch Shift' 'Ring Modulation' 'Robotization-Whisperization' 'Template Frequency Domain' 'Template Time Domain' 'Tremolo' 'Vibrato' 'Wah-Wah')
-          for p in "${plugins[@]}"; do
-            (
-              cd "${p}"
-              ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave "${p}.jucer"
-              xcodebuild -project "./Builds/MacOSX/${p}.xcodeproj" -alltargets -configuration Release -arch $(uname -m)
-              cd ./Products
-              zip -r "${p}.zip" ./*
-            )
-          done
+          cd "${{ matrix.plugin }}"
+          ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave "${{ matrix.plugin }}.jucer"
+          xcodebuild -project "./Builds/MacOSX/${{ matrix.plugin }}.xcodeproj" -alltargets -configuration Release -arch $(uname -m)
+          cd ./Products
+          zip -r "${{ matrix.plugin }}.zip" ./*
 
       # TODO: match format of https://github.com/juandagilc/Audio-Effects/releases/tag/v1.0.0
       #
