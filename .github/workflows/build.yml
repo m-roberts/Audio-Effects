@@ -25,10 +25,10 @@ jobs:
           unzip ./juce-6.0.4-osx.zip
           rm ./juce-6.0.4-osx.zip
 
-          cd "${{ matrix.plugin }}"
+          cd "${{github.workspace }}/${{ matrix.plugin }}"
           ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave "${{ matrix.plugin }}.jucer"
           xcodebuild -project "./Builds/MacOSX/${{ matrix.plugin }}.xcodeproj" -alltargets -configuration Release -arch $(uname -m)
-          cd ./Products
+          cd "${{github.workspace }}/${{ matrix.plugin }}/Products"
           zip -r "${{ matrix.plugin }}.zip" ./*
 
       # TODO: match format of https://github.com/juandagilc/Audio-Effects/releases/tag/v1.0.0
@@ -40,6 +40,5 @@ jobs:
       - name: Upload zipped artefacts
         uses: actions/upload-artifact@v2
         with:
-          path: |
-            ./**/Products/*.zip
+          path: ${{github.workspace }}/${{ matrix.plugin }}/Products/*.zip
           if-no-files-found: error
