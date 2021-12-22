@@ -59,14 +59,15 @@ jobs:
 
       - name: macOS Build
         run: |
-          set -x
           cd "${{github.workspace }}/${{ matrix.plugin }}"
           ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave "${{ matrix.plugin }}.jucer"
           xcodebuild -project "./Builds/MacOSX/${{ matrix.plugin }}.xcodeproj" -alltargets -configuration Release -arch $(uname -m)
+
+      - name: Zip plugin
+        run: |
           cd "${{github.workspace }}/${{ matrix.plugin }}/Products"
-          ls -lR
-          rm -rf ./VST3/ ./lib*.a
-          ls -lR
+          rm -rf ./*.vst3 ./lib*.a
+          mv ./VST3/* ./
           zip -r "${{ matrix.plugin }}.zip" ./*
 
       # TODO: Windows steps
