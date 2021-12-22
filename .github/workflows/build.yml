@@ -68,6 +68,7 @@ jobs:
           cd "${{github.workspace }}/${{ matrix.plugin }}/Products"
           rm -rf ./*.vst3 ./lib*.a
           mv ./VST3/* ./
+          rm -rf ./VST3
           zip -r "${{ matrix.plugin }}.zip" ./*
 
       # TODO: Windows steps
