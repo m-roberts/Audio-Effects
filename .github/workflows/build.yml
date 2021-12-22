@@ -26,14 +26,20 @@ jobs:
           plugins=('Chorus' 'Compressor-Expander' 'Delay' 'Distortion' 'Flanger' 'Panning' 'Parametric EQ' 'Phaser' 'Ping-Pong Delay' 'Pitch Shift' 'Ring Modulation' 'Robotization-Whisperization' 'Template Frequency Domain' 'Template Time Domain' 'Tremolo' 'Vibrato' 'Wah-Wah')
           for p in "${plugins[@]}"; do
             (
-              cd ${p}
-              ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave ${p}.jucer
-              xcodebuild -project ./Builds/MacOSX/${p}.xcodeproj -alltargets -configuration Release -arch $(uname -m)
+              cd "${p}"
+              ~/JUCE/Projucer.app/Contents/MacOS/Projucer --resave "${p}.jucer"
+              xcodebuild -project "./Builds/MacOSX/${p}.xcodeproj" -alltargets -configuration Release -arch $(uname -m)
               cd ./Products
-              zip -r ${p}.zip ./*
+              zip -r "${p}.zip" ./*
             )
           done
 
+      # TODO: match format of https://github.com/juandagilc/Audio-Effects/releases/tag/v1.0.0
+      #
+      # Standalone.macOS.zip
+      # Standalone.Windows.zip
+      # VST3.macOS.zip
+      # VST3.Windows.zip
       - name: Upload zipped artefacts
         uses: actions/upload-artifact@v2
         with:
