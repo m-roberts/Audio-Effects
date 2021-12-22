@@ -14,7 +14,7 @@ jobs:
         with:
           workflow: build.yml
           workflow_conclusion: success
-          branch: main
+          branch: master
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
